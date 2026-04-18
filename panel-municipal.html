@@ -1,0 +1,1304 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MiMuni – Panel Municipal</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;1,9..144,300&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy: #0E2A4A;
+  --navy-mid: #163A62;
+  --blue: #1B5FA8;
+  --blue-light: #E8F0FB;
+  --accent: #C4522A;
+  --accent-light: #FDF0EB;
+  --gold: #D4A027;
+  --gold-light: #FBF5E6;
+  --green: #1A7A4A;
+  --green-light: #E6F5ED;
+  --red: #B91C1C;
+  --red-light: #FEF2F2;
+  --purple: #6B21A8;
+  --purple-light: #F3E8FF;
+  --surface: #F4F5F8;
+  --surface2: #ECEDF2;
+  --border: #D6D9E3;
+  --text: #0E1825;
+  --text-mid: #3D4A5C;
+  --text-muted: #7A8799;
+  --white: #FFFFFF;
+  --sidebar-w: 220px;
+  --radius: 12px;
+  --radius-sm: 8px;
+  --shadow: 0 1px 8px rgba(14,42,74,0.07);
+  --shadow-md: 0 4px 20px rgba(14,42,74,0.10);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Outfit', sans-serif; background: var(--surface); color: var(--text); min-height: 100vh; display: flex; font-size: 14px; }
+
+/* ── SIDEBAR ── */
+.sidebar {
+  width: var(--sidebar-w);
+  background: var(--navy);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  position: fixed;
+  top: 0; left: 0; bottom: 0;
+  z-index: 200;
+}
+.sidebar-brand {
+  padding: 20px 18px 16px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+.brand-logo {
+  display: flex; align-items: center; gap: 10px;
+}
+.brand-icon {
+  width: 32px; height: 32px;
+  background: var(--accent);
+  border-radius: 7px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px;
+}
+.brand-name { font-size: 15px; font-weight: 700; color: var(--white); }
+.brand-sub { font-size: 10px; color: rgba(255,255,255,0.4); margin-top: 1px; }
+
+.sidebar-nav { flex: 1; padding: 12px 8px; }
+.nav-section-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.3);
+  padding: 12px 10px 6px;
+}
+.nav-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 9px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  color: rgba(255,255,255,0.6);
+  font-size: 13px;
+  font-weight: 500;
+  transition: all 0.15s;
+  margin-bottom: 2px;
+}
+.nav-item:hover { background: rgba(255,255,255,0.08); color: var(--white); }
+.nav-item.active { background: rgba(255,255,255,0.13); color: var(--white); font-weight: 600; }
+.nav-icon { font-size: 15px; width: 20px; text-align: center; flex-shrink: 0; }
+.nav-badge {
+  margin-left: auto;
+  background: var(--accent);
+  color: var(--white);
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 100px;
+  min-width: 20px;
+  text-align: center;
+}
+
+.sidebar-user {
+  padding: 12px 14px;
+  border-top: 1px solid rgba(255,255,255,0.08);
+  display: flex; align-items: center; gap: 10px;
+}
+.user-avatar {
+  width: 30px; height: 30px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.15);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px;
+  flex-shrink: 0;
+}
+.user-name { font-size: 12px; font-weight: 600; color: var(--white); }
+.user-role { font-size: 10px; color: rgba(255,255,255,0.4); }
+
+/* ── MAIN ── */
+.main-area {
+  margin-left: var(--sidebar-w);
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* ── TOPBAR ── */
+.topbar {
+  background: var(--white);
+  border-bottom: 1px solid var(--border);
+  padding: 0 28px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.topbar-title { font-size: 16px; font-weight: 700; color: var(--navy); }
+.topbar-right { display: flex; align-items: center; gap: 12px; }
+.topbar-search {
+  display: flex; align-items: center; gap: 8px;
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 7px 12px;
+}
+.topbar-search input {
+  border: none; background: none; outline: none;
+  font-family: 'Outfit', sans-serif; font-size: 13px;
+  color: var(--text); width: 200px;
+}
+.topbar-search input::placeholder { color: var(--text-muted); }
+.notif-btn {
+  position: relative;
+  width: 34px; height: 34px;
+  border-radius: 8px;
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; font-size: 15px;
+}
+.notif-dot {
+  position: absolute; top: 5px; right: 5px;
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--accent);
+  border: 2px solid var(--white);
+}
+
+/* ── PAGE CONTENT ── */
+.page-content { padding: 24px 28px; flex: 1; }
+.page { display: none; }
+.page.active { display: block; animation: fadeIn 0.25s ease; }
+@keyframes fadeIn { from { opacity:0; transform:translateY(6px); } to { opacity:1; transform:translateY(0); } }
+
+/* ── KPI CARDS ── */
+.kpi-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 24px; }
+.kpi-card {
+  background: var(--white);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius);
+  padding: 18px 20px;
+  box-shadow: var(--shadow);
+}
+.kpi-label { font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 8px; }
+.kpi-value { font-family: 'Fraunces', serif; font-size: 34px; font-weight: 600; color: var(--navy); line-height: 1; }
+.kpi-sub { font-size: 12px; color: var(--text-muted); margin-top: 6px; }
+.kpi-trend { font-weight: 600; }
+.kpi-trend.up { color: var(--green); }
+.kpi-trend.down { color: var(--red); }
+.kpi-accent-bar { height: 3px; border-radius: 2px; margin-bottom: 14px; }
+
+/* ── TWO COL ── */
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px; }
+.three-col { display: grid; grid-template-columns: 2fr 1fr; gap: 16px; margin-bottom: 24px; }
+
+/* ── SECTION CARD ── */
+.section-card {
+  background: var(--white);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+.section-head {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border);
+}
+.section-head-title { font-size: 14px; font-weight: 700; color: var(--navy); }
+.section-head-action {
+  font-size: 12px; font-weight: 600; color: var(--blue);
+  cursor: pointer; border: none; background: none; font-family: 'Outfit', sans-serif;
+}
+.section-head-action:hover { opacity: 0.7; }
+
+/* ── TICKET TABLE ── */
+.ticket-table { width: 100%; border-collapse: collapse; }
+.ticket-table th {
+  padding: 10px 16px;
+  text-align: left;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+}
+.ticket-table td {
+  padding: 13px 16px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: middle;
+}
+.ticket-table tr:last-child td { border-bottom: none; }
+.ticket-table tbody tr { cursor: pointer; transition: background 0.15s; }
+.ticket-table tbody tr:hover { background: var(--surface); }
+
+.ticket-id { font-weight: 700; color: var(--navy); font-size: 12px; }
+.ticket-cat { display: flex; align-items: center; gap: 7px; }
+.cat-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.ticket-addr { font-size: 12px; color: var(--text-mid); max-width: 160px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ticket-date { font-size: 12px; color: var(--text-muted); white-space: nowrap; }
+
+/* STATUS BADGES */
+.badge {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 4px 10px;
+  border-radius: 100px;
+  font-size: 11px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.badge-new { background: #DBEAFE; color: #1E40AF; }
+.badge-review { background: var(--gold-light); color: #92400E; }
+.badge-inprogress { background: var(--purple-light); color: var(--purple); }
+.badge-closed { background: var(--green-light); color: var(--green); }
+.badge-urgent { background: var(--red-light); color: var(--red); }
+
+/* PRIORITY DOT */
+.p-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.p-normal { background: #9CA3AF; }
+.p-moderado { background: var(--gold); }
+.p-urgente { background: var(--red); }
+
+/* ── CHART BARS ── */
+.bar-chart { padding: 16px 20px; }
+.bar-row { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+.bar-row:last-child { margin-bottom: 0; }
+.bar-label { font-size: 12px; color: var(--text-mid); width: 130px; flex-shrink: 0; }
+.bar-wrap { flex: 1; background: var(--surface2); border-radius: 4px; height: 8px; overflow: hidden; }
+.bar-fill { height: 100%; border-radius: 4px; transition: width 1s ease; }
+.bar-count { font-size: 12px; font-weight: 600; color: var(--text); width: 28px; text-align: right; flex-shrink: 0; }
+
+/* ── ACTIVITY FEED ── */
+.feed-item {
+  display: flex; gap: 12px; padding: 14px 20px;
+  border-bottom: 1px solid var(--border);
+}
+.feed-item:last-child { border-bottom: none; }
+.feed-icon-wrap {
+  width: 32px; height: 32px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; flex-shrink: 0;
+}
+.feed-body { flex: 1; }
+.feed-text { font-size: 13px; color: var(--text-mid); line-height: 1.4; }
+.feed-text strong { color: var(--text); font-weight: 600; }
+.feed-time { font-size: 11px; color: var(--text-muted); margin-top: 3px; }
+
+/* ── DETAIL PANEL ── */
+.detail-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(14,26,37,0.45);
+  z-index: 300;
+  display: flex;
+  justify-content: flex-end;
+  opacity: 0; pointer-events: none; transition: opacity 0.2s;
+}
+.detail-overlay.open { opacity: 1; pointer-events: all; }
+.detail-panel {
+  width: 480px; max-width: 95vw;
+  background: var(--white);
+  height: 100%;
+  overflow-y: auto;
+  transform: translateX(30px);
+  transition: transform 0.25s;
+  display: flex; flex-direction: column;
+}
+.detail-overlay.open .detail-panel { transform: translateX(0); }
+.detail-header {
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+  position: sticky; top: 0; background: var(--white); z-index: 10;
+}
+.detail-close {
+  width: 30px; height: 30px; border-radius: 6px;
+  background: var(--surface); border: 1.5px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; font-size: 14px; flex-shrink: 0;
+}
+.detail-body { padding: 20px 24px; flex: 1; }
+.detail-section { margin-bottom: 24px; }
+.detail-section-title {
+  font-size: 11px; font-weight: 700; letter-spacing: 0.07em;
+  text-transform: uppercase; color: var(--text-muted);
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+}
+.detail-field { margin-bottom: 12px; }
+.detail-field-label { font-size: 11px; font-weight: 600; color: var(--text-muted); margin-bottom: 3px; }
+.detail-field-val { font-size: 14px; color: var(--text); line-height: 1.4; }
+
+/* Timeline */
+.timeline { }
+.tl-item { display: flex; gap: 12px; }
+.tl-left { display: flex; flex-direction: column; align-items: center; gap: 0; }
+.tl-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; margin-top: 4px; }
+.tl-line { width: 2px; flex: 1; background: var(--border); margin: 2px 0; min-height: 20px; }
+.tl-item:last-child .tl-line { display: none; }
+.tl-body { flex: 1; padding-bottom: 16px; }
+.tl-action { font-size: 13px; font-weight: 600; color: var(--text); }
+.tl-detail { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+.tl-time { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+
+/* Status change */
+.status-selector { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
+.status-opt {
+  padding: 7px 14px;
+  border-radius: 8px;
+  border: 1.5px solid var(--border);
+  font-size: 12px; font-weight: 600;
+  cursor: pointer; transition: all 0.15s;
+  color: var(--text-mid);
+}
+.status-opt:hover { border-color: var(--blue); color: var(--blue); }
+.status-opt.sel { border-color: var(--blue); background: var(--blue-light); color: var(--blue); }
+
+.assign-row { display: flex; gap: 10px; }
+.assign-row select {
+  flex: 1; border: 1.5px solid var(--border); border-radius: var(--radius-sm);
+  padding: 9px 12px; font-family: 'Outfit', sans-serif; font-size: 13px;
+  color: var(--text); background: var(--surface); outline: none;
+}
+.assign-row select:focus { border-color: var(--blue); background: var(--white); }
+.save-btn {
+  background: var(--navy); color: var(--white);
+  border: none; border-radius: var(--radius-sm);
+  padding: 9px 20px; font-family: 'Outfit', sans-serif;
+  font-size: 13px; font-weight: 600; cursor: pointer;
+  transition: background 0.15s; white-space: nowrap;
+}
+.save-btn:hover { background: var(--blue); }
+.note-input {
+  width: 100%; border: 1.5px solid var(--border); border-radius: var(--radius-sm);
+  padding: 10px 12px; font-family: 'Outfit', sans-serif; font-size: 13px;
+  color: var(--text); outline: none; resize: vertical; min-height: 72px;
+  background: var(--surface); margin-bottom: 10px;
+}
+.note-input:focus { border-color: var(--blue); background: var(--white); }
+
+/* ── INBOX FILTERS ── */
+.filter-bar {
+  display: flex; align-items: center; gap: 10px;
+  padding: 14px 0;
+  margin-bottom: 4px;
+  flex-wrap: wrap;
+}
+.filter-pill {
+  padding: 6px 14px;
+  border-radius: 100px;
+  border: 1.5px solid var(--border);
+  font-size: 12px; font-weight: 600;
+  cursor: pointer; color: var(--text-mid);
+  transition: all 0.15s; white-space: nowrap;
+}
+.filter-pill:hover { border-color: var(--navy); color: var(--navy); }
+.filter-pill.active { background: var(--navy); border-color: var(--navy); color: var(--white); }
+.filter-select {
+  border: 1.5px solid var(--border); border-radius: var(--radius-sm);
+  padding: 6px 12px; font-family: 'Outfit', sans-serif; font-size: 12px;
+  color: var(--text-mid); background: var(--white); outline: none; cursor: pointer;
+}
+.filter-select:focus { border-color: var(--blue); }
+.filter-spacer { flex: 1; }
+
+/* ── REPORTS ── */
+.reports-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 24px; }
+.report-card {
+  background: var(--white); border: 1.5px solid var(--border);
+  border-radius: var(--radius); padding: 20px; box-shadow: var(--shadow);
+}
+.report-icon { font-size: 24px; margin-bottom: 12px; }
+.report-label { font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 6px; }
+.report-value { font-family: 'Fraunces', serif; font-size: 28px; font-weight: 600; color: var(--navy); }
+.report-sub { font-size: 12px; color: var(--text-muted); margin-top: 4px; }
+
+/* SLA bar */
+.sla-row { margin-bottom: 14px; }
+.sla-head { display: flex; justify-content: space-between; margin-bottom: 5px; }
+.sla-name { font-size: 13px; font-weight: 600; color: var(--text-mid); }
+.sla-pct { font-size: 13px; font-weight: 700; }
+.sla-bar-wrap { background: var(--surface2); border-radius: 4px; height: 8px; overflow: hidden; }
+.sla-bar-fill { height: 100%; border-radius: 4px; }
+
+/* Config page */
+.config-row {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 16px 20px; border-bottom: 1px solid var(--border);
+}
+.config-row:last-child { border-bottom: none; }
+.config-info { flex: 1; }
+.config-label { font-size: 14px; font-weight: 600; color: var(--text); }
+.config-desc { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+.toggle-wrap { display: flex; align-items: center; gap: 8px; }
+.toggle-label { font-size: 12px; color: var(--text-muted); font-weight: 500; }
+.toggle {
+  position: relative; width: 36px; height: 20px;
+  background: var(--surface2); border-radius: 10px;
+  cursor: pointer; transition: background 0.2s;
+  border: 1.5px solid var(--border);
+}
+.toggle.on { background: var(--blue); border-color: var(--blue); }
+.toggle::after {
+  content: ''; position: absolute;
+  top: 2px; left: 2px;
+  width: 12px; height: 12px;
+  border-radius: 50%; background: var(--white);
+  transition: transform 0.2s;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+.toggle.on::after { transform: translateX(16px); }
+
+.empty-state { text-align: center; padding: 40px 20px; color: var(--text-muted); }
+.empty-icon { font-size: 32px; margin-bottom: 10px; }
+.empty-text { font-size: 14px; font-weight: 500; }
+
+/* Map placeholder */
+.map-placeholder {
+  background: linear-gradient(135deg, #EEF3F8, #E2EBF4);
+  border-radius: var(--radius);
+  height: 240px;
+  display: flex; align-items: center; justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+.map-dots { position: absolute; inset: 0; }
+.map-pin { position: absolute; font-size: 20px; cursor: pointer; transform: translate(-50%,-100%); filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2)); transition: transform 0.15s; }
+.map-pin:hover { transform: translate(-50%,-100%) scale(1.2); }
+.map-label {
+  background: rgba(14,42,74,0.7);
+  color: var(--white);
+  font-size: 11px; font-weight: 600;
+  padding: 4px 10px; border-radius: 100px;
+  backdrop-filter: blur(4px);
+}
+
+@media (max-width: 900px) {
+  :root { --sidebar-w: 0px; }
+  .sidebar { display: none; }
+  .kpi-row { grid-template-columns: repeat(2,1fr); }
+  .two-col, .three-col, .reports-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sidebar-brand">
+    <div class="brand-logo">
+      <div class="brand-icon">🏛️</div>
+      <div>
+        <div class="brand-name">MiMuni</div>
+        <div class="brand-sub">Panel Municipal</div>
+      </div>
+    </div>
+  </div>
+  <nav class="sidebar-nav">
+    <div class="nav-section-label">Gestión</div>
+    <div class="nav-item active" onclick="showPage('dashboard')">
+      <span class="nav-icon">📊</span> Dashboard
+    </div>
+    <div class="nav-item" onclick="showPage('inbox')">
+      <span class="nav-icon">📥</span> Solicitudes
+      <span class="nav-badge" id="inbox-badge">12</span>
+    </div>
+    <div class="nav-item" onclick="showPage('mapa')">
+      <span class="nav-icon">📍</span> Mapa
+    </div>
+    <div class="nav-section-label">Análisis</div>
+    <div class="nav-item" onclick="showPage('reportes')">
+      <span class="nav-icon">📈</span> Reportes
+    </div>
+    <div class="nav-section-label">Sistema</div>
+    <div class="nav-item" onclick="showPage('config')">
+      <span class="nav-icon">⚙️</span> Configuración
+    </div>
+  </nav>
+  <div class="sidebar-user">
+    <div class="user-avatar">👤</div>
+    <div>
+      <div class="user-name">Carlos Mendoza</div>
+      <div class="user-role">Administrador</div>
+    </div>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<div class="main-area">
+
+  <!-- TOPBAR -->
+  <header class="topbar">
+    <div class="topbar-title" id="topbar-title">Dashboard</div>
+    <div class="topbar-right">
+      <div class="topbar-search">
+        <span>🔍</span>
+        <input type="text" placeholder="Buscar ticket o dirección..." oninput="searchTickets(this.value)">
+      </div>
+      <div class="notif-btn" onclick="showPage('inbox')">
+        🔔
+        <div class="notif-dot"></div>
+      </div>
+    </div>
+  </header>
+
+  <div class="page-content">
+
+    <!-- ══════════════ DASHBOARD PAGE ══════════════ -->
+    <div class="page active" id="page-dashboard">
+      <div class="kpi-row">
+        <div class="kpi-card">
+          <div class="kpi-accent-bar" style="background:var(--blue);"></div>
+          <div class="kpi-label">Total solicitudes</div>
+          <div class="kpi-value">247</div>
+          <div class="kpi-sub"><span class="kpi-trend up">↑ 14%</span> vs mes anterior</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-accent-bar" style="background:var(--accent);"></div>
+          <div class="kpi-label">Pendientes</div>
+          <div class="kpi-value">38</div>
+          <div class="kpi-sub"><span class="kpi-trend down">↑ 5 nuevas hoy</span></div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-accent-bar" style="background:var(--green);"></div>
+          <div class="kpi-label">Cerradas este mes</div>
+          <div class="kpi-value">184</div>
+          <div class="kpi-sub"><span class="kpi-trend up">74%</span> tasa de cierre</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-accent-bar" style="background:var(--gold);"></div>
+          <div class="kpi-label">Tiempo promedio</div>
+          <div class="kpi-value">4.2d</div>
+          <div class="kpi-sub"><span class="kpi-trend up">↓ 0.8 días</span> vs anterior</div>
+        </div>
+      </div>
+
+      <div class="three-col">
+        <!-- RECENT TICKETS -->
+        <div class="section-card">
+          <div class="section-head">
+            <div class="section-head-title">Solicitudes recientes</div>
+            <button class="section-head-action" onclick="showPage('inbox')">Ver todas →</button>
+          </div>
+          <table class="ticket-table">
+            <thead>
+              <tr>
+                <th>Ticket</th>
+                <th>Categoría</th>
+                <th>Estado</th>
+                <th>Fecha</th>
+              </tr>
+            </thead>
+            <tbody id="recent-tickets-body"></tbody>
+          </table>
+        </div>
+
+        <!-- ACTIVITY -->
+        <div class="section-card">
+          <div class="section-head">
+            <div class="section-head-title">Actividad reciente</div>
+          </div>
+          <div id="activity-feed"></div>
+        </div>
+      </div>
+
+      <div class="two-col">
+        <!-- CATEGORIES CHART -->
+        <div class="section-card">
+          <div class="section-head">
+            <div class="section-head-title">Solicitudes por categoría</div>
+          </div>
+          <div class="bar-chart" id="cat-chart"></div>
+        </div>
+
+        <!-- MAP PREVIEW -->
+        <div class="section-card">
+          <div class="section-head">
+            <div class="section-head-title">Mapa de incidencias</div>
+            <button class="section-head-action" onclick="showPage('mapa')">Ver mapa →</button>
+          </div>
+          <div style="padding:16px;">
+            <div class="map-placeholder">
+              <div class="map-dots" id="mini-map-dots"></div>
+              <div class="map-label">Lima · Vista del distrito</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════ INBOX PAGE ══════════════ -->
+    <div class="page" id="page-inbox">
+      <div class="filter-bar">
+        <div class="filter-pill active" id="fil-all" onclick="setFilter('all',this)">Todos <span style="color:var(--text-muted);font-weight:400;font-size:11px;margin-left:2px;">(47)</span></div>
+        <div class="filter-pill" id="fil-nuevo" onclick="setFilter('nuevo',this)">🔵 Nuevos (12)</div>
+        <div class="filter-pill" id="fil-revision" onclick="setFilter('revision',this)">🟡 En revisión (9)</div>
+        <div class="filter-pill" id="fil-proceso" onclick="setFilter('proceso',this)">🟣 En proceso (11)</div>
+        <div class="filter-pill" id="fil-cerrado" onclick="setFilter('cerrado',this)">✅ Cerrados (15)</div>
+        <div class="filter-spacer"></div>
+        <select class="filter-select" onchange="filterByArea(this.value)">
+          <option value="">Todas las áreas</option>
+          <option>Obras y vialidad</option>
+          <option>Limpieza pública</option>
+          <option>Alumbrado</option>
+          <option>Parques y jardines</option>
+          <option>Fiscalización</option>
+          <option>Serenazgo</option>
+        </select>
+      </div>
+      <div class="section-card">
+        <table class="ticket-table">
+          <thead>
+            <tr>
+              <th>Ticket</th>
+              <th>Categoría</th>
+              <th>Dirección</th>
+              <th>Prioridad</th>
+              <th>Estado</th>
+              <th>Asignado a</th>
+              <th>Fecha</th>
+            </tr>
+          </thead>
+          <tbody id="inbox-table-body"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ══════════════ MAPA PAGE ══════════════ -->
+    <div class="page" id="page-mapa">
+      <div class="two-col" style="margin-bottom:16px;">
+        <div class="section-card">
+          <div class="section-head">
+            <div class="section-head-title">Distribución geográfica</div>
+          </div>
+          <div style="padding:16px;">
+            <div class="map-placeholder" style="height:380px;">
+              <div class="map-dots" id="full-map-dots"></div>
+              <div class="map-label">Distrito · 47 incidencias activas</div>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="section-card" style="margin-bottom:14px;">
+            <div class="section-head"><div class="section-head-title">Zonas con más incidencias</div></div>
+            <div class="bar-chart" id="zona-chart"></div>
+          </div>
+          <div class="section-card">
+            <div class="section-head"><div class="section-head-title">Por tipo de incidencia</div></div>
+            <div class="bar-chart" id="tipo-chart"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════ REPORTES PAGE ══════════════ -->
+    <div class="page" id="page-reportes">
+      <div class="reports-grid">
+        <div class="report-card">
+          <div class="report-icon">📥</div>
+          <div class="report-label">Ingresadas este mes</div>
+          <div class="report-value">63</div>
+          <div class="report-sub">Promedio: 3.1 por día hábil</div>
+        </div>
+        <div class="report-card">
+          <div class="report-icon">✅</div>
+          <div class="report-label">Cerradas este mes</div>
+          <div class="report-value">51</div>
+          <div class="report-sub">81% tasa de resolución</div>
+        </div>
+        <div class="report-card">
+          <div class="report-icon">⚡</div>
+          <div class="report-label">Urgentes atendidas</div>
+          <div class="report-value">8/9</div>
+          <div class="report-sub">89% dentro del SLA urgente</div>
+        </div>
+        <div class="report-card">
+          <div class="report-icon">⏱️</div>
+          <div class="report-label">Tiempo promedio cierre</div>
+          <div class="report-value">4.2d</div>
+          <div class="report-sub">SLA objetivo: 5 días hábiles</div>
+        </div>
+        <div class="report-card">
+          <div class="report-icon">😊</div>
+          <div class="report-label">Satisfacción ciudadana</div>
+          <div class="report-value">4.1/5</div>
+          <div class="report-sub">Basado en 27 respuestas</div>
+        </div>
+        <div class="report-card">
+          <div class="report-icon">📱</div>
+          <div class="report-label">Notificaciones enviadas</div>
+          <div class="report-value">142</div>
+          <div class="report-sub">WhatsApp + correo</div>
+        </div>
+      </div>
+
+      <div class="two-col">
+        <div class="section-card">
+          <div class="section-head"><div class="section-head-title">Cumplimiento de SLA por área</div></div>
+          <div style="padding:20px;" id="sla-chart"></div>
+        </div>
+        <div class="section-card">
+          <div class="section-head"><div class="section-head-title">Volumen mensual (últimos 6 meses)</div></div>
+          <div class="bar-chart" id="monthly-chart"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════ CONFIG PAGE ══════════════ -->
+    <div class="page" id="page-config">
+      <div class="two-col">
+        <div>
+          <div class="section-card" style="margin-bottom:16px;">
+            <div class="section-head"><div class="section-head-title">Información del municipio</div></div>
+            <div style="padding:20px;">
+              <div style="display:grid;gap:14px;">
+                <div>
+                  <label style="display:block;font-size:12px;font-weight:600;color:var(--text-muted);margin-bottom:5px;">Nombre del distrito</label>
+                  <input type="text" value="Municipalidad Distrital de San Miguel" style="width:100%;border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:9px 12px;font-family:'Outfit',sans-serif;font-size:13px;color:var(--text);outline:none;background:var(--surface);">
+                </div>
+                <div>
+                  <label style="display:block;font-size:12px;font-weight:600;color:var(--text-muted);margin-bottom:5px;">Correo de notificaciones</label>
+                  <input type="email" value="operaciones@munisanmiguel.gob.pe" style="width:100%;border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:9px 12px;font-family:'Outfit',sans-serif;font-size:13px;color:var(--text);outline:none;background:var(--surface);">
+                </div>
+                <div>
+                  <label style="display:block;font-size:12px;font-weight:600;color:var(--text-muted);margin-bottom:5px;">Días hábiles de SLA</label>
+                  <input type="number" value="5" style="width:120px;border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:9px 12px;font-family:'Outfit',sans-serif;font-size:13px;color:var(--text);outline:none;background:var(--surface);">
+                </div>
+                <button class="save-btn" style="width:fit-content;padding:10px 24px;">Guardar cambios</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="section-card">
+            <div class="section-head"><div class="section-head-title">Notificaciones</div></div>
+            <div id="config-toggles"></div>
+          </div>
+        </div>
+
+        <div>
+          <div class="section-card" style="margin-bottom:16px;">
+            <div class="section-head">
+              <div class="section-head-title">Áreas y responsables</div>
+              <button class="section-head-action">+ Agregar</button>
+            </div>
+            <div id="areas-list"></div>
+          </div>
+
+          <div class="section-card">
+            <div class="section-head">
+              <div class="section-head-title">Usuarios del sistema</div>
+              <button class="section-head-action">+ Invitar</button>
+            </div>
+            <div id="users-list"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /page-content -->
+</div><!-- /main-area -->
+
+<!-- DETAIL PANEL -->
+<div class="detail-overlay" id="detail-overlay" onclick="closeDetailIfBg(event)">
+  <div class="detail-panel" id="detail-panel">
+    <div class="detail-header">
+      <div>
+        <div style="font-size:12px;color:var(--text-muted);margin-bottom:2px;">Solicitud</div>
+        <div style="font-size:16px;font-weight:700;color:var(--navy);" id="d-ticket-id">MM-25001</div>
+      </div>
+      <div class="detail-close" onclick="closeDetail()">✕</div>
+    </div>
+    <div class="detail-body">
+      <div class="detail-section">
+        <div class="detail-section-title">Información</div>
+        <div class="detail-field">
+          <div class="detail-field-label">Categoría</div>
+          <div class="detail-field-val" id="d-cat">—</div>
+        </div>
+        <div class="detail-field">
+          <div class="detail-field-label">Dirección</div>
+          <div class="detail-field-val" id="d-addr">—</div>
+        </div>
+        <div class="detail-field">
+          <div class="detail-field-label">Descripción del ciudadano</div>
+          <div class="detail-field-val" id="d-desc" style="color:var(--text-mid);line-height:1.5;">—</div>
+        </div>
+        <div class="detail-field">
+          <div class="detail-field-label">Prioridad</div>
+          <div class="detail-field-val" id="d-priority">—</div>
+        </div>
+        <div class="detail-field">
+          <div class="detail-field-label">Fecha de ingreso</div>
+          <div class="detail-field-val" id="d-date">—</div>
+        </div>
+      </div>
+
+      <div class="detail-section">
+        <div class="detail-section-title">Gestión</div>
+        <div style="margin-bottom:12px;">
+          <div class="detail-field-label" style="margin-bottom:7px;">Cambiar estado</div>
+          <div class="status-selector" id="d-status-opts"></div>
+        </div>
+        <div style="margin-bottom:12px;">
+          <div class="detail-field-label" style="margin-bottom:7px;">Asignar área</div>
+          <div class="assign-row">
+            <select id="d-area-select">
+              <option>Obras y vialidad</option>
+              <option>Limpieza pública</option>
+              <option>Alumbrado</option>
+              <option>Parques y jardines</option>
+              <option>Fiscalización</option>
+              <option>Serenazgo</option>
+            </select>
+            <button class="save-btn" onclick="saveAssignment()">Guardar</button>
+          </div>
+        </div>
+        <div>
+          <div class="detail-field-label" style="margin-bottom:7px;">Agregar nota interna</div>
+          <textarea class="note-input" id="d-note" placeholder="Nota para el equipo..."></textarea>
+          <button class="save-btn" onclick="addNote()">Agregar nota</button>
+        </div>
+      </div>
+
+      <div class="detail-section">
+        <div class="detail-section-title">Historial</div>
+        <div class="timeline" id="d-timeline"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── DATA ──
+const now = new Date();
+const tickets = [
+  { id:'MM-25284751', cat:'🕳️ Bache o pista dañada', area:'Obras y vialidad', addr:'Av. La Marina 2400, San Miguel', priority:'urgente', status:'nuevo', assigned:'—', date: daysAgo(0), desc:'Hundimiento grande en la pista cerca al semáforo. Varios autos ya han tenido problemas.' },
+  { id:'MM-25283412', cat:'💡 Poste de luz apagado', area:'Alumbrado', addr:'Jr. Sucre 450, cuadra 4', priority:'moderado', status:'revision', assigned:'Luis Torres', date: daysAgo(1), desc:'El poste lleva 3 noches apagado. La zona queda muy oscura y hay temor por la seguridad.' },
+  { id:'MM-25282001', cat:'🗑️ Acumulación de basura', area:'Limpieza pública', addr:'Parque Los Andes, entrada principal', priority:'urgente', status:'proceso', assigned:'Ana Quispe', date: daysAgo(1), desc:'Se acumuló desmonte desde el fin de semana. Bloquea parte de la vereda.' },
+  { id:'MM-25281543', cat:'🌳 Parque deteriorado', area:'Parques y jardines', addr:'Parque San Felipe, sector B', priority:'normal', status:'proceso', assigned:'Ricardo Vega', date: daysAgo(2), desc:'Los juegos del parque están oxidados y uno tiene una parte rota que puede lastimar a niños.' },
+  { id:'MM-25280892', cat:'⚡ Cable eléctrico caído', area:'Alumbrado', addr:'Calle Los Eucaliptos 180', priority:'urgente', status:'cerrado', assigned:'Luis Torres', date: daysAgo(3), desc:'Cable colgando a baja altura en la vereda. Muy peligroso.' },
+  { id:'MM-25279441', cat:'🚶 Vereda rota', area:'Obras y vialidad', addr:'Av. Universitaria 3100', priority:'normal', status:'cerrado', assigned:'Ana Quispe', date: daysAgo(4), desc:'Tres losas partidas que no permiten el paso de personas en silla de ruedas.' },
+  { id:'MM-25278230', cat:'💧 Fuga de agua', area:'Obras y vialidad', addr:'Jr. Independencia 890', priority:'moderado', status:'revision', assigned:'—', date: daysAgo(4), desc:'Fuga pequeña en la pista genera charco permanente. El asfalto se está levantando.' },
+  { id:'MM-25277019', cat:'🚦 Semáforo dañado', area:'Obras y vialidad', addr:'Av. Brasil con Av. Del Ejército', priority:'urgente', status:'nuevo', assigned:'—', date: daysAgo(5), desc:'Semáforo solo parpadea en ámbar. El cruce está muy peligroso, ya hubo un choque menor.' },
+  { id:'MM-25276114', cat:'📋 Licencia de funcionamiento', area:'Fiscalización', addr:'Jr. Callao 520, local 3', priority:'normal', status:'proceso', assigned:'Marco León', date: daysAgo(6), desc:'Solicitud nueva para apertura de bodega. RUC 20615822190.' },
+  { id:'MM-25274833', cat:'🚫 Negocio sin licencia', area:'Fiscalización', addr:'Mercado Santa Rosa, puesto 14', priority:'moderado', status:'nuevo', assigned:'—', date: daysAgo(7), desc:'El puesto opera desde las 11pm con música alta. Vecinos se quejan de ruido.' },
+  { id:'MM-25273602', cat:'🌲 Árbol en riesgo', area:'Parques y jardines', addr:'Av. Sucre 1200, berma central', priority:'urgente', status:'cerrado', assigned:'Ricardo Vega', date: daysAgo(8), desc:'Árbol inclinado peligrosamente sobre la calzada por lluvias recientes.' },
+  { id:'MM-25271451', cat:'🛡️ Incidencia de seguridad', area:'Serenazgo', addr:'Parque Los Andes, esquina sur', priority:'moderado', status:'nuevo', assigned:'—', date: daysAgo(9), desc:'Grupo reunido nocturnamente en la esquina del parque. Vecinos han visto consumo.' },
+];
+
+function daysAgo(d) {
+  const dt = new Date(now);
+  dt.setDate(dt.getDate() - d);
+  return dt.toLocaleDateString('es-PE', { day:'2-digit', month:'short', year:'numeric' });
+}
+
+const statusLabels = { nuevo:'Nuevo', revision:'En revisión', proceso:'En proceso', cerrado:'Cerrado' };
+const statusBadge = {
+  nuevo: '<span class="badge badge-new">🔵 Nuevo</span>',
+  revision: '<span class="badge badge-review">🟡 En revisión</span>',
+  proceso: '<span class="badge badge-inprogress">🟣 En proceso</span>',
+  cerrado: '<span class="badge badge-closed">✅ Cerrado</span>',
+};
+const priorityLabel = { normal:'<span style="display:flex;align-items:center;gap:5px;"><span class="p-dot p-normal"></span> Normal</span>', moderado:'<span style="display:flex;align-items:center;gap:5px;"><span class="p-dot p-moderado"></span> Moderado</span>', urgente:'<span style="display:flex;align-items:center;gap:5px;font-weight:700;color:var(--red)"><span class="p-dot p-urgente"></span> Urgente</span>' };
+
+const catColors = {
+  '🕳️':'#E85D24','💡':'#D4A027','🗑️':'#6B7280','🌳':'#1A7A4A',
+  '⚡':'#DC2626','🚶':'#6B7280','💧':'#1B5FA8','🚦':'#D97706',
+  '📋':'#6B21A8','🚫':'#DC2626','🌲':'#1A7A4A','🛡️':'#1B5FA8','🛡️':'#1B5FA8'
+};
+
+// ── PAGES ──
+let currentFilter = 'all';
+const pageTitles = { dashboard:'Dashboard', inbox:'Solicitudes', mapa:'Mapa de incidencias', reportes:'Reportes', config:'Configuración' };
+
+function showPage(name) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('page-' + name).classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(n => { if (n.textContent.toLowerCase().includes(pageTitles[name].slice(0,5).toLowerCase())) n.classList.add('active'); });
+  document.getElementById('topbar-title').textContent = pageTitles[name];
+
+  if (name === 'inbox') renderInbox(currentFilter);
+  if (name === 'mapa') renderFullMap();
+  if (name === 'reportes') renderReports();
+  if (name === 'config') renderConfig();
+}
+
+// ── RENDER DASHBOARD ──
+function renderDashboard() {
+  // Recent tickets
+  const tbody = document.getElementById('recent-tickets-body');
+  tbody.innerHTML = tickets.slice(0,6).map(t => `
+    <tr onclick="openDetail('${t.id}')">
+      <td><span class="ticket-id">${t.id}</span></td>
+      <td><span class="ticket-cat"><span class="cat-dot" style="background:${catColors[t.cat[0]+'️']||'#888'};"></span>${t.cat}</span></td>
+      <td>${statusBadge[t.status]}</td>
+      <td class="ticket-date">${t.date}</td>
+    </tr>
+  `).join('');
+
+  // Activity
+  const feed = document.getElementById('activity-feed');
+  const acts = [
+    { icon:'📥', bg:'#E8F0FB', text:'<strong>MM-25284751</strong> ingresó como urgente', time:'Hace 12 min' },
+    { icon:'✅', bg:'#E6F5ED', text:'<strong>MM-25273602</strong> cerrado por Ricardo Vega', time:'Hace 1h' },
+    { icon:'🔄', bg:'#F3E8FF', text:'<strong>MM-25282001</strong> cambiado a "En proceso"', time:'Hace 2h' },
+    { icon:'👤', bg:'var(--gold-light)', text:'<strong>MM-25281543</strong> asignado a Ricardo Vega', time:'Hace 3h' },
+    { icon:'📥', bg:'#E8F0FB', text:'<strong>MM-25280892</strong> cable caído, urgente', time:'Ayer' },
+  ];
+  feed.innerHTML = acts.map(a => `
+    <div class="feed-item">
+      <div class="feed-icon-wrap" style="background:${a.bg}">${a.icon}</div>
+      <div class="feed-body">
+        <div class="feed-text">${a.text}</div>
+        <div class="feed-time">${a.time}</div>
+      </div>
+    </div>
+  `).join('');
+
+  // Categories bar chart
+  const cats = [
+    { name:'Baches / vías', count:64, color:'#E85D24' },
+    { name:'Alumbrado', count:48, color:'#D4A027' },
+    { name:'Limpieza', count:43, color:'#1B5FA8' },
+    { name:'Parques', count:38, color:'#1A7A4A' },
+    { name:'Licencias', count:29, color:'#6B21A8' },
+    { name:'Seguridad', count:25, color:'#DC2626' },
+  ];
+  const max = Math.max(...cats.map(c => c.count));
+  document.getElementById('cat-chart').innerHTML = cats.map(c => `
+    <div class="bar-row">
+      <div class="bar-label">${c.name}</div>
+      <div class="bar-wrap"><div class="bar-fill" style="width:${(c.count/max*100)}%;background:${c.color};"></div></div>
+      <div class="bar-count">${c.count}</div>
+    </div>
+  `).join('');
+
+  // Mini map
+  const pins = [
+    { top:'30%', left:'45%', icon:'🔴' }, { top:'50%', left:'35%', icon:'🟡' },
+    { top:'60%', left:'55%', icon:'🔴' }, { top:'40%', left:'60%', icon:'🟡' },
+    { top:'70%', left:'42%', icon:'🟢' }, { top:'35%', left:'52%', icon:'🟡' },
+    { top:'55%', left:'48%', icon:'🔴' }, { top:'45%', left:'38%', icon:'🟢' },
+  ];
+  document.getElementById('mini-map-dots').innerHTML = pins.map(p =>
+    `<div class="map-pin" style="top:${p.top};left:${p.left};" onclick="showPage('mapa')">${p.icon}</div>`
+  ).join('');
+}
+
+// ── RENDER INBOX ──
+function renderInbox(filter = 'all') {
+  currentFilter = filter;
+  const filtered = filter === 'all' ? tickets : tickets.filter(t => t.status === filter);
+  const tbody = document.getElementById('inbox-table-body');
+  if (!filtered.length) {
+    tbody.innerHTML = `<tr><td colspan="7"><div class="empty-state"><div class="empty-icon">📭</div><div class="empty-text">Sin solicitudes en esta categoría</div></div></td></tr>`;
+    return;
+  }
+  tbody.innerHTML = filtered.map(t => `
+    <tr onclick="openDetail('${t.id}')">
+      <td><span class="ticket-id">${t.id}</span></td>
+      <td><span class="ticket-cat"><span class="cat-dot" style="background:${catColors[t.cat[0]+'️']||catColors[t.cat[0]]||'#888'};"></span>${t.cat}</span></td>
+      <td><span class="ticket-addr" title="${t.addr}">${t.addr}</span></td>
+      <td>${priorityLabel[t.priority]}</td>
+      <td>${statusBadge[t.status]}</td>
+      <td style="font-size:12px;color:var(--text-mid);">${t.assigned}</td>
+      <td class="ticket-date">${t.date}</td>
+    </tr>
+  `).join('');
+}
+
+let activeFilter = 'all';
+function setFilter(val, el) {
+  activeFilter = val;
+  document.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
+  el.classList.add('active');
+  renderInbox(val);
+}
+function filterByArea(val) { renderInbox(activeFilter); }
+function searchTickets(q) {
+  if (!q) { renderInbox(activeFilter); return; }
+  const qq = q.toLowerCase();
+  const filtered = tickets.filter(t =>
+    t.id.toLowerCase().includes(qq) || t.cat.toLowerCase().includes(qq) || t.addr.toLowerCase().includes(qq)
+  );
+  const tbody = document.getElementById('inbox-table-body') || document.getElementById('recent-tickets-body');
+  // update inbox if open
+  if (document.getElementById('page-inbox').classList.contains('active')) {
+    document.getElementById('inbox-table-body').innerHTML = filtered.map(t => `
+      <tr onclick="openDetail('${t.id}')">
+        <td><span class="ticket-id">${t.id}</span></td>
+        <td><span class="ticket-cat"><span class="cat-dot" style="background:#888;"></span>${t.cat}</span></td>
+        <td><span class="ticket-addr">${t.addr}</span></td>
+        <td>${priorityLabel[t.priority]}</td>
+        <td>${statusBadge[t.status]}</td>
+        <td style="font-size:12px;color:var(--text-mid);">${t.assigned}</td>
+        <td class="ticket-date">${t.date}</td>
+      </tr>
+    `).join('') || `<tr><td colspan="7"><div class="empty-state"><div class="empty-icon">🔍</div><div class="empty-text">Sin resultados para "${q}"</div></div></td></tr>`;
+  }
+}
+
+// ── MAP ──
+function renderFullMap() {
+  const pins = [
+    { top:'28%', left:'44%', icon:'🔴', label:'Bache urgente' },
+    { top:'48%', left:'33%', icon:'🟡', label:'Alumbrado' },
+    { top:'58%', left:'54%', icon:'🔴', label:'Basura crítica' },
+    { top:'38%', left:'59%', icon:'🟡', label:'Semáforo' },
+    { top:'68%', left:'41%', icon:'🟢', label:'Parque - cerrado' },
+    { top:'33%', left:'51%', icon:'🟡', label:'Vereda rota' },
+    { top:'53%', left:'47%', icon:'🔴', label:'Cable caído' },
+    { top:'43%', left:'37%', icon:'🟢', label:'Árbol - cerrado' },
+    { top:'62%', left:'62%', icon:'🟡', label:'Fuga agua' },
+    { top:'72%', left:'56%', icon:'🟡', label:'Seguridad' },
+  ];
+  document.getElementById('full-map-dots').innerHTML = pins.map(p =>
+    `<div class="map-pin" style="top:${p.top};left:${p.left};" title="${p.label}">${p.icon}</div>`
+  ).join('');
+
+  const zonas = [
+    { name:'Zona norte', count:18, color:'#E85D24' },
+    { name:'Zona centro', count:15, color:'#D4A027' },
+    { name:'Zona sur', count:9, color:'#1B5FA8' },
+    { name:'Zona este', count:5, color:'#1A7A4A' },
+  ];
+  const zm = Math.max(...zonas.map(z => z.count));
+  document.getElementById('zona-chart').innerHTML = zonas.map(z => `
+    <div class="bar-row">
+      <div class="bar-label">${z.name}</div>
+      <div class="bar-wrap"><div class="bar-fill" style="width:${(z.count/zm*100)}%;background:${z.color};"></div></div>
+      <div class="bar-count">${z.count}</div>
+    </div>
+  `).join('');
+
+  const tipos = [
+    { name:'Infraestructura', count:22, color:'#E85D24' },
+    { name:'Alumbrado', count:12, color:'#D4A027' },
+    { name:'Limpieza', count:8, color:'#1B5FA8' },
+    { name:'Parques', count:5, color:'#1A7A4A' },
+  ];
+  const tm = Math.max(...tipos.map(t => t.count));
+  document.getElementById('tipo-chart').innerHTML = tipos.map(t => `
+    <div class="bar-row">
+      <div class="bar-label">${t.name}</div>
+      <div class="bar-wrap"><div class="bar-fill" style="width:${(t.count/tm*100)}%;background:${t.color};"></div></div>
+      <div class="bar-count">${t.count}</div>
+    </div>
+  `).join('');
+}
+
+// ── REPORTS ──
+function renderReports() {
+  const slaData = [
+    { area:'Obras y vialidad', pct:88, color:'#1B5FA8' },
+    { area:'Limpieza pública', pct:95, color:'#1A7A4A' },
+    { area:'Alumbrado', pct:72, color:'#D4A027' },
+    { area:'Parques y jardines', pct:91, color:'#1A7A4A' },
+    { area:'Fiscalización', pct:78, color:'#6B21A8' },
+    { area:'Serenazgo', pct:85, color:'#E85D24' },
+  ];
+  document.getElementById('sla-chart').innerHTML = slaData.map(s => `
+    <div class="sla-row">
+      <div class="sla-head">
+        <div class="sla-name">${s.area}</div>
+        <div class="sla-pct" style="color:${s.pct>=90?'var(--green)':s.pct>=75?'var(--gold)':'var(--red)'};">${s.pct}%</div>
+      </div>
+      <div class="sla-bar-wrap">
+        <div class="sla-bar-fill" style="width:${s.pct}%;background:${s.color};"></div>
+      </div>
+    </div>
+  `).join('');
+
+  const months = [
+    { m:'Nov', v:41 }, { m:'Dic', v:35 }, { m:'Ene', v:58 },
+    { m:'Feb', v:52 }, { m:'Mar', v:49 }, { m:'Abr', v:63 },
+  ];
+  const mv = Math.max(...months.map(m => m.v));
+  document.getElementById('monthly-chart').innerHTML = months.map(m => `
+    <div class="bar-row">
+      <div class="bar-label">${m.m}</div>
+      <div class="bar-wrap"><div class="bar-fill" style="width:${(m.v/mv*100)}%;background:#1B5FA8;"></div></div>
+      <div class="bar-count">${m.v}</div>
+    </div>
+  `).join('');
+}
+
+// ── CONFIG ──
+function renderConfig() {
+  const toggles = [
+    { label:'WhatsApp al ciudadano', desc:'Notificar cambios de estado por WhatsApp', on:true },
+    { label:'Alertas de urgente', desc:'Notificar al equipo cuando ingresa una urgente', on:true },
+    { label:'Recordatorio SLA', desc:'Alertar al asignado cuando falta 1 día para vencer', on:true },
+    { label:'Resumen diario', desc:'Enviar resumen diario al administrador', on:false },
+    { label:'Email al ciudadano', desc:'Notificar también por correo electrónico', on:false },
+  ];
+  document.getElementById('config-toggles').innerHTML = toggles.map((t,i) => `
+    <div class="config-row">
+      <div class="config-info">
+        <div class="config-label">${t.label}</div>
+        <div class="config-desc">${t.desc}</div>
+      </div>
+      <div class="toggle-wrap">
+        <div class="toggle-label">${t.on?'Activo':'Inactivo'}</div>
+        <div class="toggle ${t.on?'on':''}" onclick="toggleSwitch(this,${i})"></div>
+      </div>
+    </div>
+  `).join('');
+
+  const areas = [
+    { name:'Obras y vialidad', resp:'Carlos Mendoza', count:18 },
+    { name:'Limpieza pública', resp:'Ana Quispe', count:11 },
+    { name:'Alumbrado', resp:'Luis Torres', count:9 },
+    { name:'Parques y jardines', resp:'Ricardo Vega', count:6 },
+    { name:'Fiscalización', resp:'Marco León', count:5 },
+    { name:'Serenazgo', resp:'Jorge Pachas', count:3 },
+  ];
+  document.getElementById('areas-list').innerHTML = areas.map(a => `
+    <div class="config-row">
+      <div class="config-info">
+        <div class="config-label">${a.name}</div>
+        <div class="config-desc">Responsable: ${a.resp} · ${a.count} activos</div>
+      </div>
+      <button class="section-head-action" style="font-size:12px;font-weight:600;color:var(--blue);border:none;background:none;cursor:pointer;font-family:'Outfit',sans-serif;">Editar</button>
+    </div>
+  `).join('');
+
+  const users = [
+    { name:'Carlos Mendoza', role:'Administrador', active:true },
+    { name:'Ana Quispe', role:'Operador · Limpieza', active:true },
+    { name:'Luis Torres', role:'Operador · Alumbrado', active:true },
+    { name:'Ricardo Vega', role:'Operador · Parques', active:true },
+    { name:'Marco León', role:'Operador · Fiscalización', active:false },
+  ];
+  document.getElementById('users-list').innerHTML = users.map(u => `
+    <div class="config-row">
+      <div style="display:flex;align-items:center;gap:10px;">
+        <div style="width:32px;height:32px;border-radius:50%;background:var(--blue-light);display:flex;align-items:center;justify-content:center;font-size:14px;color:var(--blue);font-weight:700;flex-shrink:0;">${u.name[0]}</div>
+        <div class="config-info">
+          <div class="config-label">${u.name}</div>
+          <div class="config-desc">${u.role}</div>
+        </div>
+      </div>
+      <span class="badge ${u.active?'badge-closed':'badge-review'}">${u.active?'Activo':'Inactivo'}</span>
+    </div>
+  `).join('');
+}
+
+function toggleSwitch(el, idx) {
+  el.classList.toggle('on');
+  const label = el.previousElementSibling;
+  label.textContent = el.classList.contains('on') ? 'Activo' : 'Inactivo';
+}
+
+// ── DETAIL ──
+let currentDetailId = null;
+let detailStatus = 'nuevo';
+
+function openDetail(id) {
+  const t = tickets.find(tk => tk.id === id);
+  if (!t) return;
+  currentDetailId = id;
+  detailStatus = t.status;
+
+  document.getElementById('d-ticket-id').textContent = t.id;
+  document.getElementById('d-cat').textContent = t.cat;
+  document.getElementById('d-addr').textContent = t.addr;
+  document.getElementById('d-desc').textContent = t.desc;
+  document.getElementById('d-priority').innerHTML = priorityLabel[t.priority];
+  document.getElementById('d-date').textContent = t.date;
+  document.getElementById('d-note').value = '';
+
+  // Status opts
+  const statuses = ['nuevo','revision','proceso','cerrado'];
+  const statusNames = { nuevo:'Nuevo', revision:'En revisión', proceso:'En proceso', cerrado:'Cerrado' };
+  document.getElementById('d-status-opts').innerHTML = statuses.map(s => `
+    <div class="status-opt ${t.status===s?'sel':''}" id="sopt-${s}" onclick="selectStatus('${s}')">${statusNames[s]}</div>
+  `).join('');
+
+  // Area select
+  const areaMap = { 'Obras y vialidad':0,'Limpieza pública':1,'Alumbrado':2,'Parques y jardines':3,'Fiscalización':4,'Serenazgo':5 };
+  const sel = document.getElementById('d-area-select');
+  sel.selectedIndex = areaMap[t.area] || 0;
+
+  // Timeline
+  const tls = [
+    { color:'#1B5FA8', action:'Solicitud recibida', detail:'Portal ciudadano · ID ' + t.id, time: t.date + ', 09:14' },
+  ];
+  if (t.status !== 'nuevo') tls.push({ color:'#D4A027', action:'Asignada a ' + t.area, detail:'Asignado a ' + t.assigned, time: t.date + ', 11:30' });
+  if (t.status === 'proceso' || t.status === 'cerrado') tls.push({ color:'#6B21A8', action:'En proceso de atención', detail:'El equipo está trabajando en el caso', time: t.date + ', 14:05' });
+  if (t.status === 'cerrado') tls.push({ color:'#1A7A4A', action:'Solicitud cerrada', detail:'Trabajo completado · Ciudadano notificado', time: daysAgo(0) + ', 16:00' });
+
+  document.getElementById('d-timeline').innerHTML = tls.map(item => `
+    <div class="tl-item">
+      <div class="tl-left">
+        <div class="tl-dot" style="background:${item.color};"></div>
+        <div class="tl-line"></div>
+      </div>
+      <div class="tl-body">
+        <div class="tl-action">${item.action}</div>
+        <div class="tl-detail">${item.detail}</div>
+        <div class="tl-time">${item.time}</div>
+      </div>
+    </div>
+  `).join('');
+
+  document.getElementById('detail-overlay').classList.add('open');
+}
+
+function selectStatus(s) {
+  detailStatus = s;
+  document.querySelectorAll('.status-opt').forEach(el => el.classList.remove('sel'));
+  document.getElementById('sopt-' + s)?.classList.add('sel');
+}
+
+function saveAssignment() {
+  const t = tickets.find(tk => tk.id === currentDetailId);
+  if (!t) return;
+  t.status = detailStatus;
+  const area = document.getElementById('d-area-select').value;
+  t.area = area;
+  closeDetail();
+  if (document.getElementById('page-inbox').classList.contains('active')) renderInbox(activeFilter);
+  else renderDashboard();
+}
+
+function addNote() {
+  const note = document.getElementById('d-note').value.trim();
+  if (!note) return;
+  const tl = document.getElementById('d-timeline');
+  const item = document.createElement('div');
+  item.className = 'tl-item';
+  item.innerHTML = `
+    <div class="tl-left">
+      <div class="tl-dot" style="background:#6B7280;"></div>
+      <div class="tl-line"></div>
+    </div>
+    <div class="tl-body">
+      <div class="tl-action">Nota agregada</div>
+      <div class="tl-detail">${note}</div>
+      <div class="tl-time">Ahora · Carlos Mendoza</div>
+    </div>
+  `;
+  tl.appendChild(item);
+  document.getElementById('d-note').value = '';
+}
+
+function closeDetail() { document.getElementById('detail-overlay').classList.remove('open'); }
+function closeDetailIfBg(e) { if (e.target === document.getElementById('detail-overlay')) closeDetail(); }
+
+// ── INIT ──
+renderDashboard();
+renderInbox('all');
+</script>
+</body>
+</html>

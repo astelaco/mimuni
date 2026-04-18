@@ -1,0 +1,1283 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MiMuni – Portal de Solicitudes</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;1,9..144,300&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy: #0E2A4A;
+  --navy-mid: #163A62;
+  --blue: #1B5FA8;
+  --blue-light: #E8F0FB;
+  --accent: #C4522A;
+  --accent-light: #FDF0EB;
+  --gold: #D4A027;
+  --gold-light: #FBF5E6;
+  --green: #1A7A4A;
+  --green-light: #E6F5ED;
+  --surface: #F7F8FA;
+  --surface2: #EDEEF2;
+  --border: #D8DBE3;
+  --text: #0E1825;
+  --text-mid: #3D4A5C;
+  --text-muted: #7A8799;
+  --white: #FFFFFF;
+  --radius: 14px;
+  --radius-sm: 8px;
+  --shadow: 0 2px 12px rgba(14,42,74,0.08);
+  --shadow-lg: 0 8px 40px rgba(14,42,74,0.14);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Outfit', sans-serif;
+  background: var(--surface);
+  color: var(--text);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── HEADER ── */
+.header {
+  background: var(--navy);
+  padding: 0 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 64px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.header-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.header-logo {
+  width: 36px; height: 36px;
+  background: var(--accent);
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px;
+}
+.header-name {
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--white);
+  letter-spacing: -0.2px;
+}
+.header-sub {
+  font-size: 11px;
+  color: rgba(255,255,255,0.5);
+  font-weight: 400;
+  margin-top: 1px;
+}
+.header-track-btn {
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.2);
+  color: var(--white);
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.header-track-btn:hover { background: rgba(255,255,255,0.18); }
+
+/* ── MAIN ── */
+main {
+  flex: 1;
+  max-width: 760px;
+  margin: 0 auto;
+  width: 100%;
+  padding: 40px 24px 80px;
+}
+
+/* ── STEPS ── */
+.steps {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  margin-bottom: 40px;
+}
+.step-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+}
+.step-dot {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px;
+  font-weight: 600;
+  background: var(--surface2);
+  color: var(--text-muted);
+  border: 2px solid var(--border);
+  transition: all 0.3s;
+  flex-shrink: 0;
+}
+.step-dot.active {
+  background: var(--blue);
+  color: var(--white);
+  border-color: var(--blue);
+}
+.step-dot.done {
+  background: var(--green);
+  color: var(--white);
+  border-color: var(--green);
+}
+.step-label {
+  font-size: 12px;
+  color: var(--text-muted);
+  font-weight: 500;
+  white-space: nowrap;
+}
+.step-label.active { color: var(--blue); font-weight: 600; }
+.step-line {
+  flex: 1;
+  height: 2px;
+  background: var(--border);
+  margin: 0 8px;
+  transition: background 0.3s;
+}
+.step-line.done { background: var(--green); }
+
+/* ── PAGE TITLE ── */
+.page-title {
+  font-family: 'Fraunces', serif;
+  font-size: 30px;
+  font-weight: 600;
+  color: var(--navy);
+  line-height: 1.2;
+  margin-bottom: 6px;
+}
+.page-subtitle {
+  font-size: 15px;
+  color: var(--text-mid);
+  margin-bottom: 32px;
+}
+
+/* ── SCREEN ── */
+.screen { display: none; }
+.screen.active { display: block; animation: fadeIn 0.3s ease; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+/* ── CATEGORY GRID ── */
+.cat-section {
+  margin-bottom: 28px;
+}
+.cat-section-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 12px;
+}
+.cat-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 10px;
+}
+.cat-card {
+  background: var(--white);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+  cursor: pointer;
+  transition: all 0.18s;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.cat-card:hover {
+  border-color: var(--blue);
+  background: var(--blue-light);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow);
+}
+.cat-icon {
+  font-size: 24px;
+  width: 44px; height: 44px;
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.cat-info { flex: 1; min-width: 0; }
+.cat-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+  line-height: 1.3;
+}
+.cat-desc {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-top: 2px;
+  line-height: 1.4;
+}
+
+/* Icon bg colors */
+.ic-red { background: #FDE8E8; }
+.ic-orange { background: #FEF0E6; }
+.ic-yellow { background: #FEF8E6; }
+.ic-green { background: #E6F7EE; }
+.ic-blue { background: #E8F1FD; }
+.ic-purple { background: #F0EAFB; }
+.ic-teal { background: #E6F5F5; }
+.ic-pink { background: #FDE8F2; }
+
+/* ── FORM SCREEN ── */
+.form-back {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--blue);
+  cursor: pointer;
+  margin-bottom: 24px;
+  width: fit-content;
+}
+.form-back:hover { opacity: 0.7; }
+
+.selected-cat-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--blue-light);
+  border: 1px solid #C2D5F0;
+  border-radius: 100px;
+  padding: 6px 14px 6px 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--blue);
+  margin-bottom: 28px;
+}
+
+.form-card {
+  background: var(--white);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius);
+  padding: 28px;
+  margin-bottom: 16px;
+  box-shadow: var(--shadow);
+}
+
+.form-section-title {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+}
+
+.field { margin-bottom: 20px; }
+.field:last-child { margin-bottom: 0; }
+
+label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-mid);
+  margin-bottom: 7px;
+}
+label .req { color: var(--accent); margin-left: 2px; }
+
+input[type="text"],
+input[type="email"],
+input[type="tel"],
+textarea,
+select {
+  width: 100%;
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 11px 14px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 14px;
+  color: var(--text);
+  transition: border-color 0.18s, box-shadow 0.18s;
+  outline: none;
+  -webkit-appearance: none;
+}
+input:focus, textarea:focus, select:focus {
+  border-color: var(--blue);
+  box-shadow: 0 0 0 3px rgba(27,95,168,0.12);
+  background: var(--white);
+}
+textarea { resize: vertical; min-height: 100px; line-height: 1.5; }
+select { cursor: pointer; }
+
+.field-hint {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-top: 5px;
+}
+
+.field-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+/* Upload area */
+.upload-area {
+  border: 2px dashed var(--border);
+  border-radius: var(--radius-sm);
+  padding: 28px 20px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.18s;
+  background: var(--surface);
+}
+.upload-area:hover {
+  border-color: var(--blue);
+  background: var(--blue-light);
+}
+.upload-icon { font-size: 28px; margin-bottom: 8px; }
+.upload-text { font-size: 13px; color: var(--text-mid); font-weight: 500; }
+.upload-hint { font-size: 11px; color: var(--text-muted); margin-top: 4px; }
+.upload-preview {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+.preview-chip {
+  background: var(--green-light);
+  border: 1px solid #B8E0CC;
+  border-radius: 6px;
+  padding: 4px 10px;
+  font-size: 11px;
+  color: var(--green);
+  font-weight: 600;
+}
+
+/* GPS */
+.gps-row {
+  display: flex;
+  gap: 10px;
+  align-items: flex-end;
+}
+.gps-row input { flex: 1; }
+.gps-btn {
+  background: var(--navy);
+  color: var(--white);
+  border: none;
+  border-radius: var(--radius-sm);
+  padding: 11px 16px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.18s;
+}
+.gps-btn:hover { background: var(--navy-mid); }
+
+/* Priority pills */
+.priority-row {
+  display: flex;
+  gap: 8px;
+}
+.priority-pill {
+  flex: 1;
+  padding: 10px 8px;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  text-align: center;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-mid);
+  transition: all 0.18s;
+}
+.priority-pill:hover { border-color: var(--blue); color: var(--blue); }
+.priority-pill.selected { border-color: var(--accent); background: var(--accent-light); color: var(--accent); }
+.priority-pill .pill-icon { font-size: 16px; display: block; margin-bottom: 4px; }
+
+/* Checkbox */
+.checkbox-field {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  cursor: pointer;
+}
+.checkbox-field input[type="checkbox"] {
+  width: 18px; height: 18px;
+  flex-shrink: 0;
+  margin-top: 1px;
+  accent-color: var(--blue);
+  cursor: pointer;
+}
+.checkbox-field span {
+  font-size: 13px;
+  color: var(--text-mid);
+  line-height: 1.4;
+}
+
+/* Submit btn */
+.submit-btn {
+  width: 100%;
+  background: var(--blue);
+  color: var(--white);
+  border: none;
+  border-radius: var(--radius);
+  padding: 16px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  letter-spacing: 0.01em;
+  transition: all 0.18s;
+  margin-top: 8px;
+}
+.submit-btn:hover {
+  background: var(--navy);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-lg);
+}
+.submit-btn:active { transform: translateY(0); }
+
+/* ── CONFIRMATION SCREEN ── */
+.confirm-card {
+  background: var(--white);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius);
+  padding: 48px 32px;
+  text-align: center;
+  box-shadow: var(--shadow-lg);
+}
+.confirm-icon-wrap {
+  width: 72px; height: 72px;
+  background: var(--green-light);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 32px;
+  margin: 0 auto 24px;
+}
+.confirm-title {
+  font-family: 'Fraunces', serif;
+  font-size: 28px;
+  font-weight: 600;
+  color: var(--navy);
+  margin-bottom: 8px;
+}
+.confirm-subtitle {
+  font-size: 15px;
+  color: var(--text-mid);
+  margin-bottom: 32px;
+  line-height: 1.5;
+}
+.ticket-box {
+  background: var(--navy);
+  border-radius: var(--radius);
+  padding: 24px;
+  margin-bottom: 32px;
+  position: relative;
+  overflow: hidden;
+}
+.ticket-box::before {
+  content: '';
+  position: absolute;
+  top: -20px; right: -20px;
+  width: 100px; height: 100px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.05);
+}
+.ticket-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.5);
+  margin-bottom: 8px;
+}
+.ticket-number {
+  font-family: 'Fraunces', serif;
+  font-size: 40px;
+  font-weight: 600;
+  color: var(--white);
+  letter-spacing: 0.04em;
+}
+.ticket-hint {
+  font-size: 12px;
+  color: rgba(255,255,255,0.5);
+  margin-top: 6px;
+}
+
+.status-chips {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 32px;
+  flex-wrap: wrap;
+}
+.status-chip {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border-radius: 100px;
+  font-size: 12px;
+  font-weight: 600;
+}
+.status-chip.active { background: var(--blue-light); color: var(--blue); }
+.status-chip.pending { background: var(--surface2); color: var(--text-muted); }
+
+.confirm-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+.btn-secondary {
+  background: var(--surface);
+  color: var(--text-mid);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 12px 24px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.18s;
+}
+.btn-secondary:hover { border-color: var(--navy); color: var(--navy); }
+.btn-primary {
+  background: var(--navy);
+  color: var(--white);
+  border: none;
+  border-radius: var(--radius-sm);
+  padding: 12px 24px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.18s;
+}
+.btn-primary:hover { background: var(--blue); }
+
+/* ── TRACK MODAL ── */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(14,26,37,0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 500;
+  padding: 24px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s;
+}
+.modal-overlay.open { opacity: 1; pointer-events: all; }
+.modal-box {
+  background: var(--white);
+  border-radius: var(--radius);
+  padding: 32px;
+  width: 100%;
+  max-width: 440px;
+  box-shadow: var(--shadow-lg);
+  transform: translateY(12px);
+  transition: transform 0.25s;
+}
+.modal-overlay.open .modal-box { transform: translateY(0); }
+.modal-title {
+  font-family: 'Fraunces', serif;
+  font-size: 22px;
+  color: var(--navy);
+  margin-bottom: 6px;
+}
+.modal-desc { font-size: 13px; color: var(--text-mid); margin-bottom: 20px; }
+.modal-actions { display: flex; gap: 10px; margin-top: 16px; }
+.modal-close {
+  position: absolute;
+  top: 16px; right: 16px;
+  background: none; border: none;
+  font-size: 20px; cursor: pointer; color: var(--text-muted);
+}
+.track-result {
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 16px;
+  margin-top: 14px;
+  display: none;
+}
+.track-result.visible { display: block; }
+.track-status-row { display: flex; align-items: center; gap: 10px; }
+.track-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--gold); flex-shrink: 0; }
+.track-status-name { font-weight: 700; font-size: 14px; color: var(--text); }
+.track-status-desc { font-size: 12px; color: var(--text-muted); margin-top: 4px; }
+.track-category { font-size: 11px; margin-top: 10px; color: var(--text-muted); }
+.track-category span { font-weight: 600; color: var(--text-mid); }
+
+/* ── FOOTER ── */
+footer {
+  background: var(--navy);
+  padding: 20px 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: gap;
+}
+.footer-text { font-size: 12px; color: rgba(255,255,255,0.4); }
+.footer-links { display: flex; gap: 20px; }
+.footer-links a { font-size: 12px; color: rgba(255,255,255,0.4); text-decoration: none; }
+.footer-links a:hover { color: rgba(255,255,255,0.7); }
+
+/* ── INFO BANNER ── */
+.info-banner {
+  background: linear-gradient(135deg, var(--blue-light), #EEF4FD);
+  border: 1px solid #C2D5F0;
+  border-radius: var(--radius);
+  padding: 16px 20px;
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  margin-bottom: 32px;
+}
+.info-icon { font-size: 20px; flex-shrink: 0; }
+.info-body { font-size: 13px; color: var(--navy-mid); line-height: 1.5; }
+.info-body strong { font-weight: 600; }
+
+@media (max-width: 500px) {
+  main { padding: 24px 16px 60px; }
+  .cat-grid { grid-template-columns: 1fr 1fr; }
+  .field-row { grid-template-columns: 1fr; }
+  .page-title { font-size: 24px; }
+  .header { padding: 0 16px; }
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="header-brand">
+    <div class="header-logo">🏛️</div>
+    <div>
+      <div class="header-name">MiMuni</div>
+      <div class="header-sub">Municipalidad Distrital</div>
+    </div>
+  </div>
+  <button class="header-track-btn" onclick="openTrack()">📋 Seguir mi solicitud</button>
+</header>
+
+<!-- MAIN -->
+<main>
+
+  <!-- STEP INDICATOR -->
+  <div class="steps" id="steps">
+    <div class="step-item">
+      <div class="step-dot active" id="dot1">1</div>
+      <div class="step-label active" id="lbl1">Tipo</div>
+    </div>
+    <div class="step-line" id="line1"></div>
+    <div class="step-item">
+      <div class="step-dot" id="dot2">2</div>
+      <div class="step-label" id="lbl2">Detalle</div>
+    </div>
+    <div class="step-line" id="line2"></div>
+    <div class="step-item">
+      <div class="step-dot" id="dot3">3</div>
+      <div class="step-label" id="lbl3">Listo</div>
+    </div>
+  </div>
+
+  <!-- SCREEN 1: CATEGORY SELECTION -->
+  <div class="screen active" id="screen-cat">
+    <div class="page-title">¿Qué deseas reportar?</div>
+    <div class="page-subtitle">Selecciona la categoría que mejor describe tu solicitud</div>
+
+    <div class="info-banner">
+      <div class="info-icon">ℹ️</div>
+      <div class="info-body">
+        <strong>Sin crear cuenta.</strong> Puedes hacer tu solicitud de forma anónima o dejando tus datos para recibir actualizaciones por WhatsApp.
+      </div>
+    </div>
+
+    <div class="cat-section">
+      <div class="cat-section-label">🛣️ Infraestructura y vías</div>
+      <div class="cat-grid">
+        <div class="cat-card" onclick="selectCat('bache', '🕳️', 'Bache o pista dañada', 'ic-orange')">
+          <div class="cat-icon ic-orange">🕳️</div>
+          <div class="cat-info">
+            <div class="cat-name">Bache o pista dañada</div>
+            <div class="cat-desc">Pista deteriorada, hundimiento</div>
+          </div>
+        </div>
+        <div class="cat-card" onclick="selectCat('vereda', '🚶', 'Vereda rota o bloqueada', 'ic-yellow')">
+          <div class="cat-icon ic-yellow">🚶</div>
+          <div class="cat-info">
+            <div class="cat-name">Vereda rota o bloqueada</div>
+            <div class="cat-desc">Losa partida, obstáculos</div>
+          </div>
+        </div>
+        <div class="cat-card" onclick="selectCat('semaforo', '🚦', 'Semáforo dañado', 'ic-red')">
+          <div class="cat-icon ic-red">🚦</div>
+          <div class="cat-info">
+            <div class="cat-name">Semáforo dañado</div>
+            <div class="cat-desc">Sin funcionar o parpadeando</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="cat-section">
+      <div class="cat-section-label">🗑️ Limpieza pública</div>
+      <div class="cat-grid">
+        <div class="cat-card" onclick="selectCat('basura', '🗑️', 'Acumulación de basura', 'ic-orange')">
+          <div class="cat-icon ic-orange">🗑️</div>
+          <div class="cat-info">
+            <div class="cat-name">Acumulación de basura</div>
+            <div class="cat-desc">Punto crítico, desmonte</div>
+          </div>
+        </div>
+        <div class="cat-card" onclick="selectCat('desmonte', '🏗️', 'Desmonte en vía pública', 'ic-yellow')">
+          <div class="cat-icon ic-yellow">🏗️</div>
+          <div class="cat-info">
+            <div class="cat-name">Desmonte en vía pública</div>
+            <div class="cat-desc">Escombros, residuos de obra</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="cat-section">
+      <div class="cat-section-label">💡 Alumbrado público</div>
+      <div class="cat-grid">
+        <div class="cat-card" onclick="selectCat('luz', '💡', 'Poste de luz apagado', 'ic-yellow')">
+          <div class="cat-icon ic-yellow">💡</div>
+          <div class="cat-info">
+            <div class="cat-name">Poste de luz apagado</div>
+            <div class="cat-desc">Zona oscura, sin iluminación</div>
+          </div>
+        </div>
+        <div class="cat-card" onclick="selectCat('cable', '⚡', 'Cable eléctrico caído', 'ic-red')">
+          <div class="cat-icon ic-red">⚡</div>
+          <div class="cat-info">
+            <div class="cat-name">Cable eléctrico caído</div>
+            <div class="cat-desc">Riesgo eléctrico, urgente</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="cat-section">
+      <div class="cat-section-label">🌳 Áreas verdes y parques</div>
+      <div class="cat-grid">
+        <div class="cat-card" onclick="selectCat('parque', '🌳', 'Parque deteriorado', 'ic-green')">
+          <div class="cat-icon ic-green">🌳</div>
+          <div class="cat-info">
+            <div class="cat-name">Parque deteriorado</div>
+            <div class="cat-desc">Juegos rotos, área descuidada</div>
+          </div>
+        </div>
+        <div class="cat-card" onclick="selectCat('arbol', '🌲', 'Árbol caído o en riesgo', 'ic-green')">
+          <div class="cat-icon ic-green">🌲</div>
+          <div class="cat-info">
+            <div class="cat-name">Árbol caído o en riesgo</div>
+            <div class="cat-desc">Caído o en peligro de caer</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="cat-section">
+      <div class="cat-section-label">🏢 Licencias y comercio</div>
+      <div class="cat-grid">
+        <div class="cat-card" onclick="selectCat('licencia-nueva', '📋', 'Solicitud de licencia', 'ic-blue')">
+          <div class="cat-icon ic-blue">📋</div>
+          <div class="cat-info">
+            <div class="cat-name">Solicitud de licencia</div>
+            <div class="cat-desc">Licencia de funcionamiento nueva</div>
+          </div>
+        </div>
+        <div class="cat-card" onclick="selectCat('denuncia-comercio', '🚫', 'Denuncia negocio informal', 'ic-red')">
+          <div class="cat-icon ic-red">🚫</div>
+          <div class="cat-info">
+            <div class="cat-name">Negocio sin licencia</div>
+            <div class="cat-desc">Informalidad, ruido fuera de hora</div>
+          </div>
+        </div>
+        <div class="cat-card" onclick="selectCat('uso-via', '🚧', 'Uso de vía pública', 'ic-purple')">
+          <div class="cat-icon ic-purple">🚧</div>
+          <div class="cat-info">
+            <div class="cat-name">Uso de vía pública</div>
+            <div class="cat-desc">Eventos, mudanzas, obras</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="cat-section">
+      <div class="cat-section-label">🛡️ Seguridad ciudadana</div>
+      <div class="cat-grid">
+        <div class="cat-card" onclick="selectCat('seguridad', '🛡️', 'Incidencia de seguridad', 'ic-purple')">
+          <div class="cat-icon ic-purple">🛡️</div>
+          <div class="cat-info">
+            <div class="cat-name">Incidencia de seguridad</div>
+            <div class="cat-desc">Punto de riesgo, actividad sospechosa</div>
+          </div>
+        </div>
+        <div class="cat-card" onclick="selectCat('agua', '💧', 'Fuga de agua o desagüe', 'ic-teal')">
+          <div class="cat-icon ic-teal">💧</div>
+          <div class="cat-info">
+            <div class="cat-name">Fuga de agua o desagüe</div>
+            <div class="cat-desc">Fuga en vía, buzón sin tapa</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCREEN 2: FORM -->
+  <div class="screen" id="screen-form">
+    <div class="form-back" onclick="goBack()">← Cambiar categoría</div>
+    <div id="selected-badge" class="selected-cat-badge"></div>
+
+    <div class="page-title" id="form-title">Detalle de la solicitud</div>
+    <div class="page-subtitle">Completa la información para que podamos atenderte correctamente</div>
+
+    <!-- DYNAMIC FORM FIELDS -->
+    <div class="form-card">
+      <div class="form-section-title">Información del problema</div>
+      <div id="dynamic-fields"></div>
+    </div>
+
+    <div class="form-card">
+      <div class="form-section-title">Ubicación</div>
+      <div class="field">
+        <label>Dirección <span class="req">*</span></label>
+        <input type="text" id="f-direccion" placeholder="Ej: Av. Brasil 1250, San Miguel">
+      </div>
+      <div class="field">
+        <label>Referencia</label>
+        <input type="text" id="f-referencia" placeholder="Ej: Frente al parque, a media cuadra del mercado">
+      </div>
+      <div class="field">
+        <label>Ubicación GPS</label>
+        <div class="gps-row">
+          <input type="text" id="f-gps" placeholder="Coordenadas" readonly>
+          <button class="gps-btn" onclick="getGPS()">📍 Usar mi ubicación</button>
+        </div>
+        <div class="field-hint">Opcional. Ayuda a localizar el problema con precisión</div>
+      </div>
+    </div>
+
+    <div class="form-card">
+      <div class="form-section-title">Tus datos (opcional)</div>
+      <div class="field-row">
+        <div class="field">
+          <label>Nombre</label>
+          <input type="text" id="f-nombre" placeholder="Tu nombre">
+        </div>
+        <div class="field">
+          <label>Teléfono / WhatsApp</label>
+          <input type="tel" id="f-telefono" placeholder="987 654 321">
+        </div>
+      </div>
+      <div class="field">
+        <label>Correo electrónico</label>
+        <input type="email" id="f-email" placeholder="tu@correo.com">
+        <div class="field-hint">Solo para enviarte actualizaciones sobre tu caso</div>
+      </div>
+      <div class="field">
+        <label class="checkbox-field">
+          <input type="checkbox" id="f-anonimo" onchange="toggleAnonimo(this)">
+          <span>Prefiero reportar de forma anónima. Entiendo que no recibiré notificaciones de seguimiento.</span>
+        </label>
+      </div>
+    </div>
+
+    <button class="submit-btn" onclick="submitForm()">Enviar solicitud →</button>
+  </div>
+
+  <!-- SCREEN 3: CONFIRMATION -->
+  <div class="screen" id="screen-confirm">
+    <div class="confirm-card">
+      <div class="confirm-icon-wrap">✅</div>
+      <div class="confirm-title">¡Solicitud registrada!</div>
+      <div class="confirm-subtitle">Tu reporte fue recibido correctamente. Guarda tu número de ticket para hacer seguimiento.</div>
+
+      <div class="ticket-box">
+        <div class="ticket-label">Número de ticket</div>
+        <div class="ticket-number" id="ticket-number">MM-000000</div>
+        <div class="ticket-hint">Válido para consultar el estado en cualquier momento</div>
+      </div>
+
+      <div class="status-chips">
+        <div class="status-chip active">✅ Recibido</div>
+        <div class="status-chip pending">⏳ En revisión</div>
+        <div class="status-chip pending">🔧 En atención</div>
+        <div class="status-chip pending">🏁 Cerrado</div>
+      </div>
+
+      <div class="confirm-subtitle" style="font-size:13px;">
+        Tiempo estimado de respuesta: <strong>3–5 días hábiles</strong>. Te notificaremos por WhatsApp si dejaste tu número.
+      </div>
+
+      <div class="confirm-actions">
+        <button class="btn-secondary" onclick="openTrack()">📋 Ver estado</button>
+        <button class="btn-primary" onclick="resetPortal()">+ Nueva solicitud</button>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-text">© 2025 MiMuni · Portal ciudadano digital</div>
+  <div class="footer-links">
+    <a href="#">Términos</a>
+    <a href="#">Privacidad</a>
+    <a href="#">Contacto</a>
+  </div>
+</footer>
+
+<!-- TRACK MODAL -->
+<div class="modal-overlay" id="modal-track" onclick="closeTrackIfBg(event)">
+  <div class="modal-box" style="position:relative;">
+    <button class="modal-close" onclick="closeTrack()">✕</button>
+    <div class="modal-title">Seguimiento de solicitud</div>
+    <div class="modal-desc">Ingresa tu número de ticket para ver el estado actual</div>
+    <div class="field">
+      <label>Número de ticket</label>
+      <input type="text" id="track-input" placeholder="Ej: MM-284751" style="text-transform:uppercase;" oninput="this.value=this.value.toUpperCase()">
+    </div>
+    <div class="modal-actions">
+      <button class="btn-secondary" onclick="closeTrack()">Cancelar</button>
+      <button class="btn-primary" onclick="doTrack()">Consultar →</button>
+    </div>
+    <div class="track-result" id="track-result">
+      <div class="track-status-row">
+        <div class="track-dot"></div>
+        <div class="track-status-name" id="tr-status">En revisión</div>
+      </div>
+      <div class="track-status-desc" id="tr-desc">Tu solicitud fue recibida y está siendo evaluada por el área correspondiente.</div>
+      <div class="track-category" id="tr-cat"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+let currentCat = null;
+let currentTicket = null;
+const ticketDB = {};
+
+const catForms = {
+  'bache': [
+    { type: 'select', id: 'f-severidad', label: 'Nivel de daño', req: true, options: ['Selecciona...','Leve (protuberancia)', 'Moderado (10–30 cm)', 'Grave (>30 cm, peligroso)', 'Hundimiento total'] },
+    { type: 'textarea', id: 'f-descripcion', label: 'Descripción', req: true, placeholder: 'Describe la ubicación exacta y cuánto tiempo lleva el daño...' },
+    { type: 'upload', id: 'f-foto', label: 'Foto del problema', req: true, hint: 'Adjunta al menos una foto. JPG o PNG, máx. 5MB' },
+    { type: 'priority', id: 'f-urgencia', label: '¿Representa riesgo inmediato?' }
+  ],
+  'vereda': [
+    { type: 'select', id: 'f-tipo-vereda', label: 'Tipo de problema', req: true, options: ['Selecciona...','Losa rota / hundida','Vereda bloqueada por obra','Rampa inexistente o dañada','Raíz de árbol levanta vereda'] },
+    { type: 'textarea', id: 'f-descripcion', label: 'Descripción', req: true, placeholder: 'Describe el daño y si afecta el paso de peatones...' },
+    { type: 'upload', id: 'f-foto', label: 'Foto del problema', req: true, hint: 'JPG o PNG, máx. 5MB' },
+    { type: 'priority', id: 'f-urgencia', label: '¿Afecta personas con discapacidad o adultos mayores?' }
+  ],
+  'semaforo': [
+    { type: 'select', id: 'f-falla', label: 'Tipo de falla', req: true, options: ['Selecciona...','Apagado completamente','Solo parpadea en ámbar','Fases desordenadas','Panel roto o vandali...','Accidente de tránsito relacionado'] },
+    { type: 'textarea', id: 'f-descripcion', label: 'Descripción adicional', req: false, placeholder: '¿Cuánto tiempo lleva así? ¿Hay congestión o accidentes?' },
+    { type: 'upload', id: 'f-foto', label: 'Foto', req: false, hint: 'Opcional' },
+    { type: 'priority', id: 'f-urgencia', label: '¿Está causando accidentes o peligro inmediato?' }
+  ],
+  'basura': [
+    { type: 'select', id: 'f-tipo-basura', label: 'Tipo de acumulación', req: true, options: ['Selecciona...','Basura doméstica','Desmonte / escombros','Residuos peligrosos (aceite, químicos)','Animales muertos'] },
+    { type: 'textarea', id: 'f-descripcion', label: 'Descripción', req: true, placeholder: 'Tamaño aproximado del acúmulo, tiempo que lleva allí...' },
+    { type: 'upload', id: 'f-foto', label: 'Foto del punto', req: true, hint: 'Ayuda mucho para priorizar la limpieza' },
+    { type: 'priority', id: 'f-urgencia', label: '¿Genera riesgo sanitario o bloquea el tránsito?' }
+  ],
+  'desmonte': [
+    { type: 'textarea', id: 'f-descripcion', label: 'Descripción', req: true, placeholder: 'Volumen aproximado, si viene de una obra cercana...' },
+    { type: 'upload', id: 'f-foto', label: 'Foto', req: true, hint: 'JPG o PNG, máx. 5MB' },
+    { type: 'priority', id: 'f-urgencia', label: '¿Bloquea vía o vereda?' }
+  ],
+  'luz': [
+    { type: 'text', id: 'f-num-poste', label: 'Número de poste (si lo ves)', placeholder: 'Ej: LM-4521 (en la placa del poste)', req: false },
+    { type: 'select', id: 'f-falla-luz', label: 'Tipo de falla', req: true, options: ['Selecciona...','Apagado total','Parpadea','Encendido de día (fotocélula)','Luminaria rota o caída'] },
+    { type: 'textarea', id: 'f-descripcion', label: 'Observaciones', req: false, placeholder: '¿Cuántos postes? ¿Desde cuándo?' },
+    { type: 'priority', id: 'f-urgencia', label: '¿La zona oscura genera inseguridad?' }
+  ],
+  'cable': [
+    { type: 'textarea', id: 'f-descripcion', label: 'Descripción del riesgo', req: true, placeholder: 'Cable caído, colgando a baja altura, chispeando... describe lo que ves.' },
+    { type: 'upload', id: 'f-foto', label: 'Foto', req: true, hint: 'Fundamental para evaluar el riesgo. Mantén distancia al tomar la foto.' },
+    { type: 'priority', id: 'f-urgencia', label: '¿Hay riesgo eléctrico inmediato?', default: 'urgente' }
+  ],
+  'parque': [
+    { type: 'select', id: 'f-tipo-parque', label: 'Tipo de problema', req: true, options: ['Selecciona...','Juegos rotos o peligrosos','Área descuidada / maleza','Bancas o mobiliario dañado','Iluminación sin funcionar','Vandalismo / pinturas'] },
+    { type: 'textarea', id: 'f-descripcion', label: 'Descripción', req: true, placeholder: '¿Qué parque es? ¿Qué parte específica está dañada?' },
+    { type: 'upload', id: 'f-foto', label: 'Foto', req: false, hint: 'JPG o PNG, máx. 5MB' },
+    { type: 'priority', id: 'f-urgencia', label: '¿Representa riesgo para niños?' }
+  ],
+  'arbol': [
+    { type: 'select', id: 'f-estado-arbol', label: 'Estado del árbol', req: true, options: ['Selecciona...','Caído y bloquea vía','Inclinado peligrosamente','Rama en riesgo de caer','Raíces que dañan pista'] },
+    { type: 'textarea', id: 'f-descripcion', label: 'Descripción adicional', req: false, placeholder: 'Tamaño aproximado, si hay cables cerca...' },
+    { type: 'upload', id: 'f-foto', label: 'Foto', req: true, hint: 'JPG o PNG, máx. 5MB' },
+    { type: 'priority', id: 'f-urgencia', label: '¿Representa peligro inmediato?', default: 'urgente' }
+  ],
+  'licencia-nueva': [
+    { type: 'text', id: 'f-ruc', label: 'RUC del negocio', placeholder: '20xxxxxxxxx o 10xxxxxxxxx', req: true },
+    { type: 'text', id: 'f-razon', label: 'Razón social o nombre comercial', placeholder: 'Como aparece en SUNAT', req: true },
+    { type: 'select', id: 'f-tipo-negocio', label: 'Giro del negocio', req: true, options: ['Selecciona...','Restaurante / Food','Bodega / Abarrotes','Salón de belleza','Oficina / Consultoría','Tienda de ropa','Farmacia / Botica','Taller mecánico','Otro'] },
+    { type: 'text', id: 'f-area', label: 'Área del establecimiento (m²)', placeholder: 'Ej: 45', req: true },
+    { type: 'upload', id: 'f-foto', label: 'Documentos adjuntos', req: false, hint: 'Croquis de ubicación, planos, DNI del representante (PDF o imagen)' }
+  ],
+  'denuncia-comercio': [
+    { type: 'textarea', id: 'f-descripcion', label: 'Descripción del problema', req: true, placeholder: 'Tipo de negocio, horario de operación, problema específico (ruido, falta de licencia, etc.)' },
+    { type: 'upload', id: 'f-foto', label: 'Evidencia (opcional)', req: false, hint: 'Foto del establecimiento o evidencia del problema' },
+    { type: 'priority', id: 'f-urgencia', label: '¿Representa riesgo para la salud o seguridad?' }
+  ],
+  'uso-via': [
+    { type: 'select', id: 'f-tipo-uso', label: 'Tipo de uso', req: true, options: ['Selecciona...','Evento público / privado','Mudanza','Obra en fachada','Colocación de toldo o panel','Otro'] },
+    { type: 'text', id: 'f-fecha', label: 'Fecha de uso', placeholder: 'dd/mm/aaaa', req: true },
+    { type: 'text', id: 'f-duracion', label: 'Duración estimada', placeholder: 'Ej: 4 horas, todo el día', req: true },
+    { type: 'textarea', id: 'f-descripcion', label: 'Descripción de la actividad', req: true, placeholder: 'Detalla qué necesitas hacer y qué espacio de la vía usarás...' }
+  ],
+  'seguridad': [
+    { type: 'select', id: 'f-tipo-seg', label: 'Tipo de incidencia', req: true, options: ['Selecciona...','Punto de micro-comercialización de drogas','Actividad sospechosa recurrente','Lugar abandonado / foco de delitos','Persona en situación de calle (apoyo social)','Luminaria de seguridad apagada'] },
+    { type: 'textarea', id: 'f-descripcion', label: 'Descripción', req: true, placeholder: 'Describe la situación. Tu reporte es confidencial.' },
+    { type: 'upload', id: 'f-foto', label: 'Evidencia (opcional)', req: false, hint: 'Solo si cuentas con ella y es seguro tomarla' },
+    { type: 'priority', id: 'f-urgencia', label: '¿Requiere atención urgente de serenazgo?' }
+  ],
+  'agua': [
+    { type: 'select', id: 'f-tipo-agua', label: 'Tipo de problema', req: true, options: ['Selecciona...','Fuga de agua en pista o vereda','Buzón de desagüe sin tapa','Desagüe colapsado y desbordado','Filtración de agua en muro público'] },
+    { type: 'textarea', id: 'f-descripcion', label: 'Descripción', req: true, placeholder: 'Tamaño de la fuga, si genera charco en vía...' },
+    { type: 'upload', id: 'f-foto', label: 'Foto', req: true, hint: 'JPG o PNG, máx. 5MB' },
+    { type: 'priority', id: 'f-urgencia', label: '¿Genera riesgo para transeúntes?' }
+  ],
+};
+
+const urgencyLabels = { 'normal': '⚪ Normal', 'moderado': '🟡 Moderado', 'urgente': '🔴 Urgente' };
+
+function selectCat(id, icon, name, iconClass) {
+  currentCat = { id, icon, name, iconClass };
+  document.getElementById('selected-badge').innerHTML = `<span style="font-size:18px">${icon}</span> ${name}`;
+  document.getElementById('form-title').textContent = name;
+  renderForm(id);
+  goTo('screen-form', 2);
+}
+
+function renderForm(catId) {
+  const container = document.getElementById('dynamic-fields');
+  const fields = catForms[catId] || [
+    { type: 'textarea', id: 'f-descripcion', label: 'Descripción del problema', req: true, placeholder: 'Describe con detalle lo que ocurre...' },
+    { type: 'upload', id: 'f-foto', label: 'Foto o evidencia', req: false, hint: 'JPG o PNG, máx. 5MB' }
+  ];
+  container.innerHTML = '';
+  fields.forEach(f => {
+    const wrap = document.createElement('div');
+    wrap.className = 'field';
+    if (f.type === 'text' || f.type === 'tel' || f.type === 'email') {
+      wrap.innerHTML = `
+        <label>${f.label}${f.req ? '<span class="req">*</span>' : ''}</label>
+        <input type="${f.type}" id="${f.id}" placeholder="${f.placeholder || ''}">
+        ${f.hint ? `<div class="field-hint">${f.hint}</div>` : ''}
+      `;
+    } else if (f.type === 'textarea') {
+      wrap.innerHTML = `
+        <label>${f.label}${f.req ? '<span class="req">*</span>' : ''}</label>
+        <textarea id="${f.id}" placeholder="${f.placeholder || ''}"></textarea>
+        ${f.hint ? `<div class="field-hint">${f.hint}</div>` : ''}
+      `;
+    } else if (f.type === 'select') {
+      wrap.innerHTML = `
+        <label>${f.label}${f.req ? '<span class="req">*</span>' : ''}</label>
+        <select id="${f.id}">${f.options.map(o => `<option>${o}</option>`).join('')}</select>
+      `;
+    } else if (f.type === 'upload') {
+      wrap.innerHTML = `
+        <label>${f.label}${f.req ? '<span class="req">*</span>' : ''}</label>
+        <div class="upload-area" onclick="triggerUpload('${f.id}-input')">
+          <div class="upload-icon">📎</div>
+          <div class="upload-text">Toca para adjuntar archivo</div>
+          <div class="upload-hint">${f.hint || 'JPG, PNG o PDF · máx. 5MB'}</div>
+          <div class="upload-preview" id="${f.id}-preview"></div>
+        </div>
+        <input type="file" id="${f.id}-input" accept="image/*,.pdf" multiple style="display:none" onchange="previewFiles(this,'${f.id}-preview')">
+      `;
+    } else if (f.type === 'priority') {
+      wrap.innerHTML = `
+        <label>${f.label}</label>
+        <div class="priority-row">
+          <div class="priority-pill ${f.default==='urgente'?'':'selected'}" id="p-normal" onclick="setPriority('normal')"><span class="pill-icon">⚪</span>No</div>
+          <div class="priority-pill ${f.default==='moderado'?'selected':''}" id="p-moderado" onclick="setPriority('moderado')"><span class="pill-icon">🟡</span>Moderado</div>
+          <div class="priority-pill ${f.default==='urgente'?'selected':''}" id="p-urgente" onclick="setPriority('urgente')"><span class="pill-icon">🔴</span>Urgente</div>
+        </div>
+      `;
+    }
+    container.appendChild(wrap);
+  });
+}
+
+let selectedPriority = 'normal';
+function setPriority(val) {
+  selectedPriority = val;
+  ['normal','moderado','urgente'].forEach(v => {
+    const el = document.getElementById('p-'+v);
+    if (el) el.classList.toggle('selected', v === val);
+  });
+}
+
+function triggerUpload(inputId) {
+  document.getElementById(inputId).click();
+}
+function previewFiles(input, previewId) {
+  const preview = document.getElementById(previewId);
+  preview.innerHTML = '';
+  Array.from(input.files).forEach(f => {
+    const chip = document.createElement('div');
+    chip.className = 'preview-chip';
+    chip.textContent = '✓ ' + f.name;
+    preview.appendChild(chip);
+  });
+}
+
+function getGPS() {
+  const btn = document.querySelector('.gps-btn');
+  btn.textContent = '⏳ Obteniendo...';
+  btn.disabled = true;
+  if (!navigator.geolocation) {
+    document.getElementById('f-gps').value = 'GPS no disponible';
+    btn.textContent = '📍 Usar mi ubicación';
+    btn.disabled = false;
+    return;
+  }
+  navigator.geolocation.getCurrentPosition(pos => {
+    document.getElementById('f-gps').value = `${pos.coords.latitude.toFixed(6)}, ${pos.coords.longitude.toFixed(6)}`;
+    btn.textContent = '✓ Ubicación capturada';
+    btn.disabled = false;
+  }, () => {
+    // Demo fallback - Lima coordinates
+    document.getElementById('f-gps').value = `-12.071100, -77.082800`;
+    btn.textContent = '✓ Ubicación capturada';
+    btn.disabled = false;
+  });
+}
+
+function toggleAnonimo(cb) {
+  const fields = ['f-nombre','f-telefono','f-email'];
+  fields.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) { el.disabled = cb.checked; el.style.opacity = cb.checked ? '0.4' : '1'; }
+  });
+}
+
+function submitForm() {
+  const direccion = document.getElementById('f-direccion').value.trim();
+  if (!direccion) {
+    alert('Por favor ingresa la dirección del problema.');
+    document.getElementById('f-direccion').focus();
+    return;
+  }
+
+  const year = new Date().getFullYear().toString().slice(-2);
+  const ticket = `MM-${year}${Math.floor(100000 + Math.random() * 900000)}`;
+  currentTicket = ticket;
+
+  const statuses = ['En revisión', 'Asignado al área', 'En revisión'];
+  const descs = [
+    'Tu solicitud fue recibida y está siendo evaluada por el área correspondiente.',
+    'Se asignó al equipo correspondiente para su atención.',
+    'En proceso de verificación y atención.'
+  ];
+  const idx = 0;
+  ticketDB[ticket] = {
+    status: statuses[idx],
+    desc: descs[idx],
+    cat: currentCat ? currentCat.name : 'Solicitud general',
+    icon: currentCat ? currentCat.icon : '📋'
+  };
+
+  document.getElementById('ticket-number').textContent = ticket;
+  goTo('screen-confirm', 3);
+  // Mark all steps done
+  ['dot1','dot2'].forEach(d => {
+    const el = document.getElementById(d);
+    el.classList.remove('active');
+    el.classList.add('done');
+    el.textContent = '✓';
+  });
+  ['line1','line2'].forEach(l => document.getElementById(l).classList.add('done'));
+}
+
+function goTo(screenId, step) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(screenId).classList.add('active');
+  updateSteps(step);
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function updateSteps(activeStep) {
+  for (let i = 1; i <= 3; i++) {
+    const dot = document.getElementById('dot' + i);
+    const lbl = document.getElementById('lbl' + i);
+    dot.classList.remove('active','done');
+    lbl.classList.remove('active');
+    if (i < activeStep) { dot.classList.add('done'); dot.textContent = '✓'; }
+    else if (i === activeStep) { dot.classList.add('active'); dot.textContent = i; lbl.classList.add('active'); }
+    else { dot.textContent = i; }
+  }
+}
+
+function goBack() {
+  goTo('screen-cat', 1);
+  ['dot1','dot2','dot3'].forEach(d => {
+    document.getElementById(d).classList.remove('done');
+  });
+}
+
+function resetPortal() {
+  currentCat = null;
+  currentTicket = null;
+  selectedPriority = 'normal';
+  goTo('screen-cat', 1);
+  updateSteps(1);
+}
+
+// TRACK MODAL
+function openTrack() {
+  if (currentTicket) document.getElementById('track-input').value = currentTicket;
+  document.getElementById('modal-track').classList.add('open');
+  document.getElementById('track-result').classList.remove('visible');
+}
+function closeTrack() { document.getElementById('modal-track').classList.remove('open'); }
+function closeTrackIfBg(e) { if (e.target === document.getElementById('modal-track')) closeTrack(); }
+
+function doTrack() {
+  const val = document.getElementById('track-input').value.trim().toUpperCase();
+  const result = document.getElementById('track-result');
+  if (!val) { alert('Ingresa un número de ticket.'); return; }
+
+  let data = ticketDB[val];
+  if (!data) {
+    // Demo fallback
+    data = { status: 'En revisión', desc: 'Tu solicitud está siendo evaluada. Tiempo estimado: 3–5 días hábiles.', cat: 'Solicitud general', icon: '📋' };
+  }
+
+  document.getElementById('tr-status').textContent = data.status;
+  document.getElementById('tr-desc').textContent = data.desc;
+  document.getElementById('tr-cat').innerHTML = `Categoría: <span>${data.icon} ${data.cat}</span>`;
+  result.classList.add('visible');
+}
+</script>
+</body>
+</html>
